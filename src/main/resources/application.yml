@@ -1,0 +1,26 @@
+jwt:
+    secret: '[a-zA-Z0-9._]^+$%NdzisdfjhbsTatanajhsy82iy743iWa43usdiUnborn23675132Nwana13212kjnbsdbiu23Ndziwerg3232sEndlahhgsweuguguyvyAppn238u8732&%#$'
+server:
+    port: 8081
+    # error:
+    #     path: /error
+    # error:
+    #     whitelabel: 
+    #         enabled: false
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/employee
+        password: admin
+        username: root
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+    # mvc:
+    #     throw-exception-if-no-handler-found: true
+    # web:
+    #     resources:
+    #         add-mappings: false
