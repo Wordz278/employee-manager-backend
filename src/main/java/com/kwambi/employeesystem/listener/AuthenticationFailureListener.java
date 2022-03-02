@@ -2,7 +2,6 @@ package com.kwambi.employeesystem.listener;
 
 
 import com.kwambi.employeesystem.service.LoginAttemptService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;

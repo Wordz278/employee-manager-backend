@@ -16,5 +16,4 @@ public class EmployeesystemApplication {
 	public BCryptPasswordEncoder bCryptPasswordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
-
 }

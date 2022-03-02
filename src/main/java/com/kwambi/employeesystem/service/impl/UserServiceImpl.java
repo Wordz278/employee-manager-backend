@@ -3,6 +3,7 @@ package com.kwambi.employeesystem.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import com.kwambi.employeesystem.constant.UserImplConstant;
@@ -13,6 +14,7 @@ import com.kwambi.employeesystem.exception.domain.EmailExistException;
 import com.kwambi.employeesystem.exception.domain.UserNotFoundException;
 import com.kwambi.employeesystem.exception.domain.UsernameExistException;
 import com.kwambi.employeesystem.repository.UserRepository;
+import com.kwambi.employeesystem.service.EmailService;
 import com.kwambi.employeesystem.service.LoginAttemptService;
 import com.kwambi.employeesystem.service.UserService;
 
@@ -34,16 +36,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Transactional //Manage propagation whenever you are dealing with one service
 @Qualifier("UserDetailsService")
 public class UserServiceImpl implements UserService, UserDetailsService {
-    private Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UserServiceImpl.class);
+    private Logger LOGGER = org.slf4j.LoggerFactory.getLogger(getClass());
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
     private LoginAttemptService loginAttemptService;
+    private EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, LoginAttemptService loginAttemptService) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, 
+        LoginAttemptService loginAttemptService, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginAttemptService = loginAttemptService;
+        this.emailService = emailService;
     }
 
 
@@ -60,21 +65,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setLastLoginDate(new Date()); //new Last time they logged in
             userRepository.save(user);
             UserPrincipal userPrincipal = new UserPrincipal(user);
-            LOGGER.info(UserImplConstant.RETURNNIG_FOUND_USER_BY_USERNAME + username);
+            LOGGER.info(UserImplConstant.FOUND_USER_BY_USERNAME + username);
             return userPrincipal;
         }
     }
-
-
 
     private void validateLoginAttempt(User user) {
         if(user.isNotLocked()){
             if(loginAttemptService.hasExceededMaxAttempts(user.getUsername())){
                 user.setNotLocked(false);
-            }else{
+            } else {
                 user.setNotLocked(true);
             }
-        }else{
+        } else {
             loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
         }
     }
@@ -83,7 +86,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User register(String firstName, String lastName, String username, String email) 
-        throws UserNotFoundException, UsernameExistException, EmailExistException {
+        throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException {
         validateNewUsernameAndEmail(StringUtils.EMPTY, username, email);
         User user = new User();
         user.setUserId(generateUserId());
@@ -102,6 +105,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl());
         userRepository.save(user);
         LOGGER.info("New user password: "+ password);
+        emailService.sendNewPasswordEmail(firstName, password, email);
         return user;
     }
 

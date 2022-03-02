@@ -2,12 +2,15 @@ package com.kwambi.employeesystem.resource;
 
 import com.kwambi.employeesystem.domain.User;
 import com.kwambi.employeesystem.domain.UserPrincipal;
+import com.kwambi.employeesystem.exception.ExceptionHandling;
 import com.kwambi.employeesystem.exception.domain.EmailExistException;
-import com.kwambi.employeesystem.exception.domain.ExceptionHandling;
 import com.kwambi.employeesystem.exception.domain.UserNotFoundException;
 import com.kwambi.employeesystem.exception.domain.UsernameExistException;
 import com.kwambi.employeesystem.service.UserService;
 import com.kwambi.employeesystem.utility.JWTTokenProvider;
+
+import javax.mail.MessagingException;
+
 import com.kwambi.employeesystem.constant.SecurityConstant;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,7 @@ public class UserResource extends ExceptionHandling{
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException{
+    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException{
         User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
