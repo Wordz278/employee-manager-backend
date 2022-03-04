@@ -2,7 +2,7 @@ package com.kwambi.employeesystem.constant;
 
 public class FileConstant {
 
-    public static final String USER_IMAGE_PATH = "/user/image";
+    public static final String USER_IMAGE_PATH = "/user/image/";
     public static final String JPG_EXTENSION = "jpg";
     public static final String USER_FOLDER = System.getProperty("user.home") + "/kwambi/user/";
     public static final String DIRECTORY_CREATED = "Created directory for: ";

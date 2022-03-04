@@ -10,8 +10,8 @@ public class EmailConstant {
 
 
     public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL = "smtps";
-    public static final String USERNAME = "your actual email";
-    public static final String PASSWORD = "your actual email password";
+    public static final String USERNAME = "your email address";
+    public static final String PASSWORD = "your email password";
     public static final String FROM_EMAIL = "support@kwambi.com";
     public static final String CC_EMAIL = "";
     public static final String EMAIL_SUBJECT = "Kwambi, LLC - New Password";    
